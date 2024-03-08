@@ -1,3 +1,4 @@
+// Converts a number to an ancient chinese numbering system
 #include <stdio.h>
 #include <wchar.h>
 #include <locale.h>
