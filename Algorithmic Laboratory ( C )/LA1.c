@@ -1,3 +1,4 @@
+// Input - day and month | Output - Emoji with correspondent zodiac sign
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
