@@ -1,0 +1,35 @@
+[
+    {
+        "nome": "Joana",
+        "email": "joana@example.com",
+        "morada": "Rua das Flores, 123, Lisboa",
+        "plano": "PREMIUM_BASE",
+        "pontos": 25.0,
+        "playlists": [
+          {
+            "tipo": "PlaylistConstruida",
+            "nome": "Favoritas de Rock",
+            "aleatoria": false
+          },
+          {
+            "tipo": "PlaylistPorGeneroDuracao",
+            "nome": "Relax Chill",
+            "genero": "Lo-Fi",
+            "duracaoMax": 1800
+          }
+        ],
+        "biblioteca": [
+          {
+            "titulo": "Greatest Hits",
+            "artista": "Queen",
+            "ano": 1981
+          },
+          {
+            "titulo": "25",
+            "artista": "Adele",
+            "ano": 2015
+          }
+        ]
+      }
+      
+]
