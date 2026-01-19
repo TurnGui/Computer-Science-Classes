@@ -36,7 +36,7 @@ The output will be the generated virtual machine code.
 ### Run all test programs
 
 To compile all test programs automatically:
-This script executes the compiler for every `.pas` file inside the `exemplos_testes` directory.
+The script: programPASCAL.py executes the compiler for every `.pas` file inside the `exemplos_testes` directory.
 
 ---
 
