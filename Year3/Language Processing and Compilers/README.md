@@ -24,7 +24,24 @@ The compiler follows the classical compilation pipeline:
    Produces code for a stack-based virtual machine.
 
 ---
+## How to Run
 
-## Project Structure
+### Run a single Pascal program
 
+From the project root directory:
+The output will be the generated virtual machine code.
+
+---
+
+### Run all test programs
+
+To compile all test programs automatically:
+This script executes the compiler for every `.pas` file inside the `exemplos_testes` directory.
+
+---
+
+## Notes
+
+- The compiler does not execute Pascal programs; it only generates virtual machine code.
+- This project is intended for educational purposes and does not fully implement the entire Pascal language.
 
