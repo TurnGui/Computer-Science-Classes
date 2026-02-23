@@ -1,0 +1,7 @@
+Se for utilizado um nonce fixo (por exemplo, sempre 0) na ChaCha20, a segurança da cifra fica comprometida.
+
+A ChaCha20 é uma cifra sequencial, ou seja, gera um fluxo de chave (keystream) que depende da chave e do nonce. Se usarmos sempre o mesmo nonce com a mesma chave, o fluxo de chave será sempre igual.
+
+Isso significa que dois ficheiros cifrados nessas condições utilizam o mesmo keystream. Um atacante pode então fazer operações entre os criptogramas e obter informação sobre os textos-limpos, podendo até recuperar partes deles.
+
+Assim, utilizar um nonce fixo é inseguro, pois permite reutilização do fluxo de chave e pode levar à quebra da confidencialidade.

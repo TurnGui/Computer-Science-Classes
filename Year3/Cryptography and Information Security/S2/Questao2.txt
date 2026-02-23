@@ -1,0 +1,14 @@
+QUESTÃO 2 
+
+Não , não há contradição. 
+
+O enunciado pediu para "esquecer" a recomendação de usar geradores criptograficamente seguros (CSPRNG) e substituir por random.seed(). 
+Esta modificação intencional cria uma vulnerabilidade demonstrativa.
+
+my_otp deixa de ser um OTP "Verdadeiro" pois usamos o random.seed() , sendo que se não é uma chave totalmente aleatória , a questão do 
+OTP verdadeiro é violada.
+
+Mesmo que haja uma forma de atacar a cifra e descobrir a seed , isso não quer dizer a mesma seja facilmente decifrável.
+No programa my_otp_attack.py , é usado uma seed bastante extensa , o que torna para um computador normal quase impossível decifrar devido ao tempo
+que teria de ser usado em prol da mesma. Ou seja, o ataque é válido e a falha de "segurança" da seed é verdadeira , sendo bastante diferente do
+que foi feito em otp.py , demonstrado na questão 1 , mesmo que não seja possível decifrar a mensagem com o "ataque" ao my_otp.py.

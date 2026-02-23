@@ -1,0 +1,28 @@
+QUESTÃO 1 
+
+O que o OTP requer (requerimentos para ser otp) : 
+Tamanho da chave ≥ texto simples
+Chave TOTALMENTE ALEATÓRIA , ou seja , difere de otp.py a my_otp.py
+Chave usada UMA VEZ
+
+
+Não existe diferenças externamente nos dois programas, pois ambos geram chaves, cifram mensagens , decifram mensagens e escrevem nos mesmo ficheiro 
+de saída. Todavia , existe uma diferença no meio da execução do programa, que é a forma da cifras que de ambos os programas dão visto
+que existem apenas diferenças na forma como a cifra é gerada , sendo que, no my otp é usado uma forma de gerar uma cifra de forma segura ,
+como diz no enunciado : "Geradores de números pseudo-aleatórios que garantam segurança criptográfica (CSPRG)" , e no my_otp , é usado random.seed(),
+o que criptográficamente não é seguro. 
+
+Ou seja, a diferença será a qualidade das cifras geradas, aonde no my_opt, por causa da forma que é gerada a cifra , é possível chegar a um padrão
+"oculto" que poderá comprometer a segurança da cifra, logo , as cifras não são iguais. 
+
+Exemplo : 
+python3 otp.py setup 30 chave_otp.key
+python3 my_otp.py setup 30 chave_my_otp.key
+hexdump -C chave_otp.key
+hexdump -C chave_my_otp.key
+
+chave_otp -> 34 0d ae 5c 20 6c d9 d5  58 eb e6 7b 6a 14 6c 6f 4b c6 52 8d bd ca 00 b3  77 a9 07 b0 aa 67 
+chave_my_otp -> cd 07 2c d8 be 6f 9f 62  ac 4c 09 c2 82 06 e7 e3 55 94 aa 6b 34 2f 5d 0a  3a 5e 48 42 28 f7
+
+As chaves parecem visualmente idênticas, porêm , a chave_my_opt é produzivel e representável/atacável se descobrirmos o seed, enquando a chave_opt
+não é representável nem atacável.
