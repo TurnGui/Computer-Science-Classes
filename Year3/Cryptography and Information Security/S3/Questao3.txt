@@ -1,0 +1,20 @@
+Resposta a questão 3 - Guião S3
+
+ChaCha20 (Criptograma) - cifra composta por texto limpo + chave 
+
+Onde : 
+C[i] = P[i] + K[i]
+ChaCha20 gera um fluxo de chave (keystream) que é aplicado bit a bit ao texto-limpo através do XOR
+
+Se trocarmos um bit do criptograma a C[i]
+Sendo j a posição do bit que queremos mudar
+
+P[j] = C[j] + K[j]
+     = C[j] + 1 + K[j]
+     = P[j] + 1
+
+Apenas o bit da posição J é invertido.
+
+Logo , trocar 1 bit do criptograma resulta em trocar apenas 1 bit do texto na mesma posição. O resto do ficheiro permanece inalterado, logo,
+Não há propagação de erros , apenas existe um erro naquela posição em específico.
+
