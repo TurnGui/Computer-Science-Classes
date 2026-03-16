@@ -1,0 +1,195 @@
+Este programa demonstra a insegurança de usar um hash simples (sem chave secreta) como Message Authentication Code (MAC). Foi implementado o jogo de segurança INT-PTXT (Integrity of Plaintext) para provar que MACs sem chave secreta não garantem integridade.
+
+# MAC (Message Authentication Code)
+
+Um MAC é uma etiqueta criptográfica que garante:
+- Integridade: A mensagem não foi alterada
+- Autenticidade: A mensagem veio de quem diz que veio
+
+Exemplo prático:
+Quando um banco envia "Transferir 100€", adiciona um MAC. Se alguém tentar mudar para "Transferir 1000€", o MAC fica inválido e a alteração é detectada.
+
+# Modelo INT-PTXT?
+
+INT-PTXT (Integrity of Plaintext) é um jogo de segurança que testa a integridade do MAC:
+
+Funcionamento do jogo:
+1. O adversário tenta forjar uma mensagem com um MAC válido
+2. Se conseguir forjar → MAC é INSEGURO
+3. Se não conseguir forjar → MAC é SEGURO
+
+ESTRUTURA DO CÓDIGO
+
+### Classes Abstratas
+
+Foram criadas classes abstratas para definir a interface que todos os MACs e adversários devem seguir:
+class MAC(ABC):
+    @abstractmethod
+    def tag(self, message: bytes) -> bytes:
+        pass
+    
+    @abstractmethod
+    def verify(self, message: bytes, tag: bytes) -> bool:
+        pass
+
+
+
+Isto permite testar diferentes implementações de MAC no mesmo jogo de segurança.
+
+
+### Implementações de MAC
+
+InsecureHashMAC (INSEGURO)
+
+Usa apenas SHA256 sem chave secreta:
+
+class InsecureHashMAC(MAC):
+    def tag(self, message: bytes) -> bytes:
+        return hashlib.sha256(message).digest()
+
+Por que é inseguro?
+- Qualquer pessoa pode calcular SHA256(mensagem)
+- Não há segredo ou chave
+- O adversário pode facilmente forjar mensagens válidas
+
+#### SecureHMAC (SEGURO)
+
+Usa HMAC com chave secreta:
+
+class SecureHMAC(MAC):
+    def __init__(self):
+        self.key = b'secret_key_12345'  # Chave secreta
+    
+    def tag(self, message: bytes) -> bytes:
+        return hmac.new(self.key, message, hashlib.sha256).digest()
+
+Por que é seguro?
+- Requer chave secreta para calcular o MAC
+- Adversário não conhece a chave
+- Impossível forjar sem conhecer a chave
+
+### Adversários
+
+#### HashMACAdversary
+
+Adversário que explora a fraqueza do hash sem chave:
+class HashMACAdversary(INT_PTXT_Adv):
+    def forge(self) -> tuple[bytes, bytes]:
+        forged_message = b"Transferir 1000 euros"
+        forged_tag = hashlib.sha256(forged_message).digest()
+        return forged_message, forged_tag
+
+Estratégia:
+1. Escolhe qualquer mensagem desejada
+2. Calcula o SHA256 dessa mensagem (não precisa de chave!)
+3. Retorna (mensagem, tag)
+4. Resultado: Forjou com sucesso!
+
+#### HMACAdversary
+
+Adversário que tenta atacar HMAC mas falha:
+class HMACAdversary(INT_PTXT_Adv):
+    def forge(self) -> tuple[bytes, bytes]:
+        forged_message = b"Transferir 1000 euros"
+        forged_tag = b'\x00' * 32  # Tag inválida (chute aleatório)
+        return forged_message, forged_tag
+
+Estratégia:
+1. Escolhe uma mensagem
+2. Tenta adivinhar um tag (não sabe a chave!)
+3. Retorna tag inválida
+4. Resultado: Falha ao forjar
+
+### Jogo INT-PTXT
+
+def INT_PTXT(mac: MAC, adversary: INT_PTXT_Adv) -> bool:
+    message, tag = adversary.forge()
+    is_valid = mac.verify(message, tag)
+    return is_valid  # True = Adversário ganhou
+
+Funcionamento:
+1. Adversário tenta forjar uma (mensagem, tag)
+2. Sistema verifica se o tag é válido
+3. Se válido → Adversário GANHOU (MAC inseguro)
+4. Se inválido → Adversário PERDEU (MAC seguro)
+
+## 4. RESULTADOS DOS TESTES
+
+### Teste 1: MAC Inseguro (Hash sem chave)
+[ADVERSÁRIO] Forjei mensagem: b'Transferir 1000 euros'
+[ADVERSÁRIO] Calculei tag: b82d13c6e8f05e205327c6f875f786e8...
+[VERIFICADOR] Tag é válida? True
+ADVERSÁRIO GANHOU! (Conseguiu forjar!)
+
+Análise:
+- O adversário conseguiu forjar uma mensagem válida
+- Calculou SHA256(mensagem) sem precisar de qualquer chave
+- O sistema verificou e aceitou como válido
+- Conclusão: Hash sem chave NÃO garante integridade
+
+### Teste 2: MAC Seguro (HMAC com chave)
+[ADVERSÁRIO] Tentei forjar: b'Transferir 1000 euros'
+[ADVERSÁRIO] Mas não sei a chave secreta!
+[VERIFICADOR] Tag é válida? False
+MAC SEGURO! (Adversário falhou!)
+
+Análise:
+- O adversário tentou forjar mas não conhece a chave secreta
+- O tag gerado é inválido
+- O sistema rejeitou a forgery
+- Conclusão: HMAC com chave garante integridade
+
+## 5. CONCLUSÕES
+
+### 5.1 Por que Hash Simples é Inseguro?
+
+Um hash simples (SHA256, MD5, etc.) usado como MAC é inseguro porque:
+
+1. É uma função pública: Qualquer pessoa pode calcular SHA256(mensagem)
+2. Não há segredo: Não precisa de chave para calcular
+3. Facilmente forjável: Adversário escolhe mensagem → calcula hash → forjou com sucesso
+4. Não garante autenticidade: Qualquer um pode gerar tags válidas
+
+Exemplo de ataque:
+Mensagem original: "Transferir 10€" + SHA256("Transferir 10€")
+Adversário muda para: "Transferir 1000€" + SHA256("Transferir 1000€")
+→ Sistema aceita! 
+
+### 5.2 HMAC é Seguro?
+
+HMAC (Hash-based Message Authentication Code) é seguro porque:
+
+1. Usa chave secreta: HMAC(chave, mensagem)
+2. Sem a chave, impossível calcular: Adversário não consegue gerar tags válidas
+3. Garante integridade E autenticidade: Só quem tem a chave pode criar tags válidos
+4. Resistente a forgery: Mesmo conhecendo mensagens e seus MACs, não consegue forjar novos
+
+Proteção:
+Mensagem: "Transferir 10€" + HMAC(chave_secreta, "Transferir 10€")
+Adversário tenta mudar: "Transferir 1000€" + ??? 
+→ Não sabe a chave, não consegue calcular HMAC válido
+→ Sistema rejeita! 
+
+### 5.3 Lição Principal
+
+Para garantir integridade de mensagens, é OBRIGATÓRIO usar MACs com chave secreta (como HMAC). Hash simples sem chave NÃO oferece proteção contra forgery.
+
+Nunca usar:
+❌ MAC = SHA256(mensagem)
+❌ MAC = MD5(mensagem)
+
+Sempre usar:
+✅ MAC = HMAC(chave_secreta, mensagem)
+✅ MAC = CMAC(chave_secreta, mensagem)
+✅ MAC = Poly1305(chave_secreta, mensagem)
+
+## 6. DEMONSTRAÇÃO PRÁTICA
+
+O código implementado demonstra na prática:
+
+1. Modelo INT-PTXT: Jogo de segurança que testa integridade
+2. Ataque bem-sucedido: Hash sem chave é facilmente forjável
+3. Defesa eficaz: HMAC com chave resiste a forgery
+4. Prova concreta: Execução mostra adversário ganhando contra hash simples e perdendo contra HMAC
+
+Esta implementação comprova teoricamente e praticamente que MACs sem chave secreta são inseguros no modelo INT-PTXT.
