@@ -4,7 +4,7 @@
 
 ## About
 
-This repository contains the work developed for the **Programming Labs I** course at UMinho. The project is built across 4 stages, each introducing a new card game or feature on top of the previous one.
+This repository contains the work developed for the **Programming Labs** course. The project is built across 4 stages, each introducing a new card game or feature on top of the previous one.
 
 ---
 
