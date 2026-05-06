@@ -10,8 +10,7 @@ This repository contains the work developed for the **Programming Labs** course.
 |-------|------|--------|
 | 1 | Golf Solitaire | Done |
 | 2 | Simple Simon |  Done |
-| 3 | DSL-driven Patience | 🔄 In Progress |
-| Final | Full project | ⏳ Pending |
+| 3 | DSL-driven Patience | In Progress |
 
 Each stage builds on the previous one — the card logic developed in Stage 1 is reused and extended in every subsequent stage.
 
