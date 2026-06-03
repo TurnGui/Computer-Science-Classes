@@ -6,7 +6,7 @@ A terminal-based implementation of a **generic card patience engine**, written i
 
 ## The Idea
 
-Instead of hardcoding the rules of each game, we built a **generic engine** that reads game descriptions from simple text files (DSL). Any patience game is now just a configuration file — no code changes needed.
+Instead of hardcoding the rules of each game, we built a **generic engine** that reads game descriptions from simple text files (DSL). Any patience game is now just a configuration file, no code changes needed.
 
 ---
 
