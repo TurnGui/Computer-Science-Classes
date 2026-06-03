@@ -163,8 +163,3 @@ join_lobby#player1
 | `→` | Rotate right |
 | `↑` | Accelerate forward |
 
----
-
-## Authors
-
-University of Minho — 2025/2026
