@@ -1,61 +1,164 @@
-# Programming Labs
+# Card Patience Engine — C
+
+A terminal-based implementation of a **card patience game engine**, written in C across 3 progressive stages.
+
 ---
+
 ## About
-This repository contains the work developed for the **Programming Labs** course. The project is built across 4 stages, each introducing a new card game or feature on top of the previous one.
+
+This project implements various card solitaire games (Golf, Simple Simon, and more) with a generic engine that can handle any patience game via configuration files. Built as part of the *Programming Laboratories* course.
 
 ---
 
-## Project Stages
-| Stage | Game | Status |
-|-------|------|--------|
-| 1 | Golf Solitaire | Done |
-| 2 | Simple Simon |  Done |
-| 3 | DSL-driven Patience | In Progress |
+## Stages
 
-Each stage builds on the previous one — the card logic developed in Stage 1 is reused and extended in every subsequent stage.
+| Stage | Game | Goal |
+|-------|------|------|
+| 1 | Golf Solitaire | Single-game implementation |
+| 2 | Simple Simon | Add second game, refactor logic |
+| 3 | Generic Engine | Any game via DSL (no code changes) |
+
+Each stage builds on the previous one — code is reused and extended.
 
 ---
 
-## Requirements (all stages)
-- Written in C, runs on `lambda.di.uminho.pt`
-- All functions: cyclomatic complexity ≤ 10
-- All functions: ≤ 15 statements
-- No global variables
-- No `goto`, `break` or `continue`
-- Modular code with strict separation between logic and interface
-- All logic functions tested with **CUnit**
-- All functions documented with **Doxygen**
+## Requirements (All Stages)
+
+- **Language:** C (ISO C99)
+- **Server:** lambda.di.uminho.pt (SSH access)
+- **Cyclomatic complexity:** <= 10 per function
+- **Statements:** <= 15 per function
+- **No global variables**
+- **No `goto`, `break`, `continue`**
+- **Modular design:** Logic separated from interface
+- **Tests:** CUnit for all logic functions
+- **Documentation:** Doxygen on all headers
 
 ---
 
 ## Project Structure
+
 ```
-golf/
-├── include/        # Header files
-├── src/            # Source files
-├── tests/          # CUnit tests
-├── docs/           # Doxygen generated documentation
+etapa3/
+├── include/              # Header files
+│   ├── carta.h          # Card (stage 1)
+│   ├── baralho.h        # Deck (stage 1)
+│   ├── pilha.h          # Stack (stage 1)
+│   ├── simon_*.h        # Simon logic (stage 2)
+│   ├── paciencia.h      # DSL structures (stage 3)
+│   ├── paciencia_parser.h
+│   ├── jogo_estado.h
+│   └── jogo_saveload.h
+├── src/                 # Implementation
+├── paciencias/          # Game configurations (.paciencia files)
+├── tests/               # CUnit tests
 ├── Makefile
 └── Doxyfile
 ```
 
 ---
 
-## How to Run
-```bash
-# Compile and run the game
-make
-./simon or ./golf
+## Build & Run
 
-# Run CUnit tests
+```bash
+# Compile
+make
+
+# Run the game
+./paciencia
+
+# Run tests
 make test
 
-# Generate Doxygen documentation
+# Generate documentation
 doxygen Doxyfile
 
-# Open documentation in browser
-firefox docs/html/index.html
-
-# Clean executables
+# Clean build
 make clean
 ```
+
+---
+
+## Commands
+
+```
+m <from> <to> <n>    Move n cards from pile to pile
+u                    Undo last move
+s <file>             Save game state
+l <file>             Load game state
+q                    Quit
+```
+
+---
+
+## Stage 3 — Generic Engine
+
+The big feature: games are now **configuration files**, not code.
+
+A game is described in ~15 lines:
+
+```
+JOGO SimpleSimon
+BARALHOS 1
+TIPO TAB =
+TIPO FUND =
+INIT TAB 8
+INIT FUND 0
+MOV TAB TAB <
+MOV TAB TAB +[m<
+AUTO TAB FUND +[mKaV
+WIN TAB 0
+```
+
+Want a new game? Create a new `.paciencia` file. No C code changes needed.
+
+---
+
+## Test Results
+
+Stage 3:
+- 12 CUnit tests, 12 passed
+- All functions: complexity <= 10, statements <= 15
+
+```bash
+make test
+```
+
+---
+
+## Key Concepts
+
+**Bitmasks for flags:** Game rules can have multiple constraints (descending, same suit, etc). We use bitwise operations instead of complex structures.
+
+**Lookup table parser:** The DSL parser uses a lookup table instead of a giant switch statement. Reduces complexity from 22 to 2.
+
+**Snapshots for undo:** Game state is copied before each move. Undo just restores a previous copy.
+
+---
+
+## Files to Know
+
+| File | Purpose |
+|------|---------|
+| `paciencia.h` | Game rule structures |
+| `paciencia_parser.c` | Reads .paciencia files |
+| `jogo_estado.c` | Game engine (validates moves, checks win) |
+| `main.c` | Terminal UI |
+
+---
+
+## Code Quality
+
+Verified with `pmccabe`:
+
+- All functions have cyclomatic complexity <= 10
+- All functions have <= 15 statements
+- No global mutable variables
+- Clean logic/interface separation
+- Full Doxygen documentation
+
+---
+
+## Authors
+
+Group LCCPL1G01
