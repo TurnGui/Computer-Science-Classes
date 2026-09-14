@@ -5,10 +5,10 @@ CREATE VIEW AtletasPorNumeroEventos AS
 SELECT 
     a.NomeAtleta,
     COUNT(ae.IdEvento) AS NumeroEventos
-FROM 
-    atleta_evento AS ae
-JOIN 
-    atleta AS a ON ae.IdAtleta = a.IdAtleta
+FROM
+    Atleta_Evento AS ae
+JOIN
+    Atleta AS a ON ae.IdAtleta = a.IdAtleta
 GROUP BY 
     a.NomeAtleta
 ORDER BY 
@@ -22,7 +22,7 @@ CREATE VIEW DetalhesEventos AS
 SELECT 
     E.IdEvento,
     E.NomeEvento,
-    E.Locall,
+    E.Local,
     E.Data_Hora,
     COUNT(DISTINCT AE.IdAtleta) AS TotalParticipantes,
     COUNT(DISTINCT ES.IdStaff) AS TotalStaff
@@ -37,7 +37,7 @@ LEFT JOIN
 ON 
     E.IdEvento = ES.IdEvento
 GROUP BY 
-    E.IdEvento, E.NomeEvento, E.Locall, E.Data_Hora;
+    E.IdEvento, E.NomeEvento, E.Local, E.Data_Hora;
     
 SELECT * FROM DetalhesEventos;
 -- DROP VIEW DetalhesEventos;
@@ -69,9 +69,9 @@ SELECT * FROM StaffEventos;
 CREATE VIEW UniversidadesMaisModalidades AS
 SELECT 
     U.NomeUniversidade,
-    COUNT(DISTINCT am.IdModalidade) AS TotalModalidades
-FROM 
-    universidade U
+    COUNT(DISTINCT AM.IdModalidade) AS TotalModalidades
+FROM
+    Universidade U
 JOIN 
     Atleta A ON U.IdUniversidade = A.IdUniversidade
 JOIN 

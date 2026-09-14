@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS Morada(
 CREATE TABLE IF NOT EXISTS Universidade(
     IdUniversidade INT AUTO_INCREMENT,
     NomeUniversidade VARCHAR(45) NOT NULL,
-    Contacto INT NOT NULL,
+    Contacto VARCHAR(20) NOT NULL,
     Pais VARCHAR(50) NOT NULL,
     IdMorada INT NOT NULL,
     PRIMARY KEY(IdUniversidade),
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS Atleta(
 	IdAtleta INT AUTO_INCREMENT,
     NomeAtleta VARCHAR(75) NOT NULL,
 	Email VARCHAR(75) NOT NULL ,
-	Contacto INT NOT NULL ,
+	Contacto VARCHAR(20) NOT NULL ,
     Genero VARCHAR(20) NOT NULL,
 	Data_Nascimento DATE NOT NULL,
     Nacionalidade VARCHAR(50) NOT NULL,
@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS Atleta(
 CREATE TABLE IF NOT EXISTS Evento(
     IdEvento INT AUTO_INCREMENT,
     NomeEvento VARCHAR(45) NOT NULL,
-    Locall VARCHAR(60) NOT NULL,
+    Local VARCHAR(60) NOT NULL,
     Data_Hora DATETIME NOT NULL,
     PRIMARY KEY(IdEvento)
 );
@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS Staff(
     NomeStaff VARCHAR(45) NOT NULL,
     Horario VARCHAR(60) NOT NULL,
     Tipo VARCHAR(20) NOT NULL,
-    Contacto INT NOT NULL,
+    Contacto VARCHAR(20) NOT NULL,
     Email VARCHAR(75),
     PRIMARY KEY(IdStaff)
 );
@@ -90,7 +90,7 @@ CREATE TABLE IF NOT EXISTS Modalidade(
 CREATE TABLE IF NOT EXISTS Treinador(
     IdTreinador INT AUTO_INCREMENT,
     NomeTreinador VARCHAR(45) NOT NULL,
-    Contacto INT NOT NULL,
+    Contacto VARCHAR(20) NOT NULL,
     Email VARCHAR(75) NOT NULL,
     PRIMARY KEY(IdTreinador)
 );

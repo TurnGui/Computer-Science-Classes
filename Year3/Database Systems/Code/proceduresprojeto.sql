@@ -8,13 +8,14 @@ CREATE PROCEDURE AdicionarAtleta(
     IN p_Nacionalidade VARCHAR(50),
     IN p_DataNascimento DATE,
     IN p_Email VARCHAR(100),
-    IN p_Contacto INT,
+    IN p_Contacto VARCHAR(20),
     IN p_IdUniversidade INT,
+    IN p_IdMorada INT,
     IN p_Genero VARCHAR(20)
 )
 BEGIN
-    INSERT INTO atleta (NomeAtleta, Nacionalidade, Data_Nascimento, Email, Contacto, IdUniversidade, Genero)
-    VALUES (p_NomeAtleta, p_Nacionalidade, p_DataNascimento, p_Email, p_Contacto, p_IdUniversidade, p_Genero);
+    INSERT INTO Atleta (NomeAtleta, Nacionalidade, Data_Nascimento, Email, Contacto, IdUniversidade, IdMorada, Genero)
+    VALUES (p_NomeAtleta, p_Nacionalidade, p_DataNascimento, p_Email, p_Contacto, p_IdUniversidade, p_IdMorada, p_Genero);
 END$$
 
 DELIMITER ;
@@ -24,7 +25,8 @@ CALL AdicionarAtleta(
     'Portugues',
     '1999-06-12',
     'joaosilva@email.com',
-    987654321,
+    '987654321',
+    1,
     1,
     'M'
 );
@@ -40,13 +42,13 @@ CREATE PROCEDURE RemoverAtleta(
 )
 BEGIN
     -- Remove as associações com eventos
-    DELETE FROM atleta_evento WHERE IdAtleta = p_IdAtleta;
+    DELETE FROM Atleta_Evento WHERE IdAtleta = p_IdAtleta;
 
     -- Remove associações com modalidades
-    DELETE FROM atleta_modalidade WHERE IdAtleta = p_IdAtleta;
+    DELETE FROM Atleta_Modalidade WHERE IdAtleta = p_IdAtleta;
 
     -- Remove o próprio atleta
-    DELETE FROM atleta WHERE IdAtleta = p_IdAtleta;
+    DELETE FROM Atleta WHERE IdAtleta = p_IdAtleta;
 END$$
 
 DELIMITER ;
@@ -67,7 +69,7 @@ CREATE PROCEDURE AssociarTreinadorAModalidade(
     IN p_IdModalidade INT
 )
 BEGIN
-    INSERT INTO modalidade_treinador (IdTreinador, IdModalidade)
+    INSERT INTO Modalidade_Treinador (IdTreinador, IdModalidade)
     VALUES (p_IdTreinador, p_IdModalidade);
 END$$
 
@@ -81,12 +83,15 @@ SELECT * FROM Modalidade_Treinador;
 
 
 -- Perfis de utilização
+-- NOTA: As passwords abaixo são apenas placeholders para fins de demonstração
+-- (ambiente local de desenvolvimento). Nunca usar passwords em texto simples
+-- num ambiente de produção — usar variáveis de ambiente/gestão de segredos.
 
-CREATE USER 'admin'@'localhost' IDENTIFIED BY 'password_admin';
-CREATE USER 'gestor'@'localhost' IDENTIFIED BY 'password_gestor';
-CREATE USER 'treinador'@'localhost' IDENTIFIED BY 'password_treinador';
-CREATE USER 'staff'@'localhost' IDENTIFIED BY 'password_staff';
-CREATE USER 'aluno'@'localhost' IDENTIFIED BY 'password_aluno';
+CREATE USER 'admin'@'localhost' IDENTIFIED BY 'CHANGE_ME_admin';
+CREATE USER 'gestor'@'localhost' IDENTIFIED BY 'CHANGE_ME_gestor';
+CREATE USER 'treinador'@'localhost' IDENTIFIED BY 'CHANGE_ME_treinador';
+CREATE USER 'staff'@'localhost' IDENTIFIED BY 'CHANGE_ME_staff';
+CREATE USER 'aluno'@'localhost' IDENTIFIED BY 'CHANGE_ME_aluno';
 
 GRANT ALL PRIVILEGES ON *.* TO 'admin'@'localhost';
 
@@ -114,8 +119,9 @@ WHERE IdAtleta = (SUBSTRING_INDEX(USER(), '@', 1));
 
 GRANT SELECT ON aluno_view TO 'aluno'@'localhost';
 
--- Remove as permissões de leitura e atualização na tabela atletas (exemplo) para o usuário gestor
-REVOKE SELECT, UPDATE ON sportorg.Atleta FROM 'gestor'@'localhost';
+-- Exemplo de como revogar permissões (não é executado em sequência com os GRANTs
+-- acima, é apenas uma demonstração da sintaxe de REVOKE):
+-- REVOKE SELECT, UPDATE ON sportorg.Atleta FROM 'gestor'@'localhost';
 
 -- Após criar ou alterar permissões, é necessário atualizar os privilégios no servidor
 FLUSH PRIVILEGES; 
@@ -124,8 +130,8 @@ FLUSH PRIVILEGES;
 -- ir até a pasta aonde está o mysql bin
 -- codigo: cd C:\Program Files\MySQL\MySQL Server 9.0
 -- cd bin 
--- mysqldump -u admin -p sportorg > backup_sportorg.sql 
--- password: password_admin
+-- mysqldump -u admin -p sportorg > backup_sportorg.sql
+-- (introduzir a password do utilizador admin quando solicitado)
 -- e cria o ficheiro backup.
 
 -- -p: Solicitará a senha do usuário.

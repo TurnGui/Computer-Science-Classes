@@ -76,7 +76,7 @@ VALUES
 -- TRUNCATE TABLE Universidade;
   
     
-INSERT INTO Evento (IdEvento, NomeEvento, Locall, Data_Hora)
+INSERT INTO Evento (IdEvento, NomeEvento, Local, Data_Hora)
 VALUES
 (1,'Natação Feminina','Ginásio 5','2024-06-12 15:30:00'),
 (2,'Natação Masculina','Ginásio 5','2024-06-13 15:00:00'),
