@@ -1,5 +1,9 @@
 # SportOrg — Relational Database for a Multi-Modality Sports Competition
 
+⚠️ **This project has moved.** This folder is kept for historical reference only.
+> The actively maintained version now lives in its own standalone repository:
+> **➡️ https://github.com/TurnGui/sportorg-database**
+
 [![Database CI](https://github.com/TurnGui/sportorg-database/actions/workflows/ci.yml/badge.svg)](https://github.com/TurnGui/sportorg-database/actions/workflows/ci.yml)
 [![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?logo=mysql&logoColor=white)](https://www.mysql.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
